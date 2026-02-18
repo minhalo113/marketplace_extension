@@ -1,0 +1,43 @@
+{
+    "manifest_version": 3,
+    "name": "My Extension",
+    "version": "1.0",
+    "description": "My Extension",
+    "permissions": [
+        "storage"
+    ],
+    "host_permissions": [
+        "https://my-website-l1fe.vercel.app/admin/dashboard/*",
+        "https://www.facebook.com/*",
+        "https://www.kijiji.ca/"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.facebook.com/*"
+            ],
+            "js": [
+                "injector_facebook.js"
+            ]
+        },
+        {
+            "matches": [
+                "https://www.kijiji.ca/*"
+            ],
+            "js": [
+                "injector_kijiji.js"
+            ]
+        },
+        {
+            "matches": [
+                "https://my-website-l1fe.vercel.app/admin/dashboard/*"
+            ],
+            "js": [
+                "harvester.js"
+            ]
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html"
+    }
+}
