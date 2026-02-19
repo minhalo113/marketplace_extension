@@ -38,6 +38,6 @@
         }
     ],
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "src/popup/popup.html"
     }
 }

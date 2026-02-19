@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Uploader</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 15px;
+            font-family: sans-serif;
+        }
+
+        h1 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+        }
+
+        .product-details {
+            display: none;
+        }
+
+        .product-details.visible {
+            display: block;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .value {
+            margin-bottom: 5px;
+            word-break: break-word;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Product Uploader</h1>
+    <div id="status" class="status">Loading...</div>
+
+    <div id="product-details" class="product-details">
+        <label>Title:</label>
+        <div id="product-title" class="value"></div>
+        <label>Price:</label>
+        <div id="product-price" class="value"></div>
+        <img id="product-image" style="max-width: 100%; margin-top: 10px; display: none;" />
+    </div>
+
+    <script type="module" src="./popup.ts"></script>
+</body>
+
+</html>
