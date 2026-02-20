@@ -52,8 +52,8 @@ async function selectCategory(targetCategory: string) {
     // console.log(options)
 
     const target = options.find(el => {
-        console.log("el:")
-        console.log(el.textContent?.trim())
+        // console.log("el:")
+        // console.log(el.textContent?.trim())
         return el.textContent?.trim() === targetCategory
     });
 
@@ -104,6 +104,61 @@ async function selectDropdown(targetCondition: string, targetTitle: string[]) {
     }
 }
 
+function getMinPrice(input: string) {
+    if (!input) return 0;
+
+    const parts = input.split(',');
+
+    const prices = parts.map(item => {
+        const trimmedItem = item.trim();
+
+        const priceMatch = trimmedItem.match(/:([\d.]+)$/);
+        if (priceMatch) {
+            return parseFloat(priceMatch[1]);
+        }
+
+        const directPrice = parseFloat(trimmedItem.replace(/[^\d.]/g, ''));
+        return !isNaN(directPrice) ? directPrice : Infinity;
+    });
+
+    const validPrices = prices.filter(p => p !== Infinity && !isNaN(p));
+
+    if (validPrices.length === 0) return 0;
+
+    const minPrice = Math.min(...validPrices);
+    return minPrice === Infinity ? 0 : minPrice;
+}
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function uploadToFacebook(imageUrls: string[]) {
+    const fileInput = document.querySelector('input[type="file"][accept*="image"]') as HTMLInputElement;
+
+    if (!fileInput) {
+        console.error("Cant find image input element")
+        return;
+    }
+
+    for (const [index, url] of imageUrls.entries()) {
+        const dataTransfer = new DataTransfer();
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const file = new File([blob], `product_image_${index}.jpg`, { type: blob.type });
+
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+            fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+            console.log(`Uploading Images ${index}. Delaying...`)
+            const randomDelay = Math.floor(Math.random() * (2034)) + 1500;
+            await sleep(randomDelay);
+        } catch (error) {
+            console.error(`Failed to download images from Cloudinary: ${url}`)
+        }
+    }
+}
+
 async function fillFacebookForm() {
     chrome.storage.local.get(['harvestedProduct'], async (result) => {
         const product = result.harvestedProduct as Product;
@@ -127,7 +182,8 @@ async function fillFacebookForm() {
                 ?.querySelector('input') as HTMLInputElement;
 
             if (priceInput) {
-                priceInput.value = product.price.replace(/[^0-9.]/g, '');
+                const minPrice = getMinPrice(product.price);
+                priceInput.value = minPrice.toString();
                 priceInput.dispatchEvent(new Event('input', { bubbles: true }));
             } else {
                 console.warn('Price input not found');
@@ -148,11 +204,12 @@ async function fillFacebookForm() {
 
             await selectDropdown('New', ['Condition', 'Điều Kiện']);
 
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             await selectDropdown('12+ years', ['Age Range', 'Độ tuổi']);
             await selectDropdown('List as In StockIf you\'re selling more than one item, show "In Stock" on your listing.', ['Availability', 'Tình trạng']);
 
+            await uploadToFacebook(product.images);
             console.log('Images to be uploaded manually or via advanced script:', product.images);
 
             alert(`Attempted to fill details for "${product.title}". Check console for missing fields.`);
