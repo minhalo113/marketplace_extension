@@ -104,29 +104,25 @@ async function selectDropdown(targetCondition: string, targetTitle: string[]) {
     }
 }
 
-function getMinPrice(input: string) {
+function getMinPrice(input: string): number {
     if (!input) return 0;
 
     const parts = input.split(',');
 
-    const prices = parts.map(item => {
-        const trimmedItem = item.trim();
+    const minPrice = parts.reduce((min, item) => {
+        const trimmed = item.trim();
+        if (!trimmed) return min;
 
-        const priceMatch = trimmedItem.match(/:([\d.]+)$/);
-        if (priceMatch) {
-            return parseFloat(priceMatch[1]);
+        const match = trimmed.match(/(?::\s*)?(\d+(?:\.\d+)?)/);
+        const price = match ? parseFloat(match[1]) : NaN;
+
+        if (!isNaN(price) && price < min) {
+            return price;
         }
+        return min;
+    }, Infinity);
 
-        const directPrice = parseFloat(trimmedItem.replace(/[^\d.]/g, ''));
-        return !isNaN(directPrice) ? directPrice : Infinity;
-    });
-
-    const validPrices = prices.filter(p => p !== Infinity && !isNaN(p));
-
-    if (validPrices.length === 0) return 0;
-
-    const minPrice = Math.min(...validPrices);
-    return minPrice === Infinity ? 0 : minPrice;
+    return minPrice === Infinity ? 0 : Math.floor(minPrice);
 }
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
