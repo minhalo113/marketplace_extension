@@ -23,25 +23,15 @@ function createFillButton() {
     document.body.appendChild(button);
 }
 
-function setValueAndDispatch(element: HTMLInputElement | HTMLTextAreaElement, value: string | number) {
-    if (element) {
-        element.value = value.toString();
-        element.dispatchEvent(new Event('input', { bubbles: true }));
-        element.dispatchEvent(new Event('change', { bubbles: true }));
-        element.dispatchEvent(new Event('blur', { bubbles: true }));
-    }
-}
-
 function fillAmazonForm() {
     chrome.storage.local.get(['harvestedProduct'], (result) => {
         const product = result.harvestedProduct as Product;
         if (product) {
             console.log('Injecting product into Amazon:', product);
 
-            // These selectors will likely need adjustment based on the exact Amazon listing page used
             const titleInput = document.querySelector('input[name="item_name"], input[name="title"]') as HTMLInputElement;
             if (titleInput) {
-                setValueAndDispatch(titleInput, product.title);
+
                 console.log(`SUCCESS: Title set to: "${product.title}"`);
             } else {
                 console.warn("Can't find title input element");
@@ -51,7 +41,7 @@ function fillAmazonForm() {
             if (priceInput) {
                 const numericPrice = parseFloat(product.price.replace(/[^0-9.]/g, ''));
                 if (!isNaN(numericPrice)) {
-                    setValueAndDispatch(priceInput, numericPrice);
+
                     console.log(`SUCCESS: Price set to ${numericPrice}.`);
                 }
             } else {
@@ -60,7 +50,7 @@ function fillAmazonForm() {
 
             const descriptionArea = document.querySelector('textarea[name="product_description"], textarea[name="description"]') as HTMLTextAreaElement;
             if (descriptionArea) {
-                setValueAndDispatch(descriptionArea, product.description);
+
                 console.log("SUCCESS: Picked description");
             } else {
                 console.warn("Can't find description textarea");

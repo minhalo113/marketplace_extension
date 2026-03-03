@@ -42,8 +42,7 @@
         },
         {
             "matches": [
-                "https://*.amazon.com/*",
-                "https://*.amazon.ca/*"
+                "https://sellercentral.amazon.ca/*"
             ],
             "js": [
                 "injector_amazon.js"
