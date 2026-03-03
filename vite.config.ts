@@ -9,6 +9,8 @@ export default defineConfig({
                 harvester: resolve('src/content/harvester.ts'),
                 injector_facebook: resolve('src/content/injector_facebook.ts'),
                 injector_kijiji: resolve('src/content/injector_kijiji.ts'),
+                injector_amazon: resolve('src/content/injector_amazon.ts'),
+                injector_ebay: resolve('src/content/injector_ebay.ts'),
             },
             output: {
                 entryFileNames: '[name].js',

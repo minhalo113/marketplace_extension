@@ -9,7 +9,11 @@
     "host_permissions": [
         "https://my-website-l1fe.vercel.app/admin/dashboard/*",
         "https://www.facebook.com/*",
-        "https://www.kijiji.ca/"
+        "https://www.kijiji.ca/",
+        "https://*.amazon.com/*",
+        "https://*.amazon.ca/*",
+        "https://*.ebay.com/*",
+        "https://*.ebay.ca/*"
     ],
     "content_scripts": [
         {
@@ -34,6 +38,24 @@
             ],
             "js": [
                 "harvester.js"
+            ]
+        },
+        {
+            "matches": [
+                "https://*.amazon.com/*",
+                "https://*.amazon.ca/*"
+            ],
+            "js": [
+                "injector_amazon.js"
+            ]
+        },
+        {
+            "matches": [
+                "https://*.ebay.com/*",
+                "https://*.ebay.ca/*"
+            ],
+            "js": [
+                "injector_ebay.js"
             ]
         }
     ],
