@@ -7,7 +7,8 @@
         "storage"
     ],
     "host_permissions": [
-        "https://my-website-l1fe.vercel.app/admin/dashboard/*",
+        "https://my-website-l1fe.vercel.app/admin/dashboard/edit-product/*",
+        "https://my-website-l1fe.vercel.app/admin/dashboard/product-reviews/*",
         "https://www.facebook.com/*",
         "https://www.kijiji.ca/",
         "https://*.amazon.com/*",
@@ -35,6 +36,14 @@
         },
         {
             "matches": [
+                "https://my-website-l1fe.vercel.app/admin/dashboard/product-reviews/*"
+            ],
+            "js": [
+                "injector_reviews.js"
+            ]
+        },
+        {
+            "matches": [
                 "https://www.kijiji.ca/*"
             ],
             "js": [
@@ -43,7 +52,7 @@
         },
         {
             "matches": [
-                "https://my-website-l1fe.vercel.app/admin/dashboard/*"
+                "https://my-website-l1fe.vercel.app/admin/dashboard/edit-product/*"
             ],
             "js": [
                 "harvester.js"
