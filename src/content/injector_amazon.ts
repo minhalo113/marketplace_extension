@@ -11,6 +11,12 @@ function createFillButton() {
     container.style.display = 'flex';
     container.style.flexDirection = 'column';
     container.style.gap = '10px';
+    container.style.alignItems = 'flex-end';
+
+    const stepsContainer = document.createElement('div');
+    stepsContainer.style.display = 'none';
+    stepsContainer.style.flexDirection = 'column';
+    stepsContainer.style.gap = '10px';
 
     const steps = [
         { text: 'Step 1: Basic Info', handler: fillAmazonStep1 },
@@ -32,9 +38,33 @@ function createFillButton() {
         button.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
         button.style.fontWeight = 'bold';
         button.addEventListener('click', step.handler);
-        container.appendChild(button);
+        stepsContainer.appendChild(button);
     });
 
+    const toggleButton = document.createElement('button');
+    toggleButton.innerText = 'Show Injector Steps';
+    toggleButton.style.padding = '12px 24px';
+    toggleButton.style.backgroundColor = '#232F3E'; // Amazon Dark Blue
+    toggleButton.style.color = '#FFFFFF';
+    toggleButton.style.border = 'none';
+    toggleButton.style.borderRadius = '5px';
+    toggleButton.style.cursor = 'pointer';
+    toggleButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+    toggleButton.style.fontWeight = 'bold';
+    toggleButton.style.fontSize = '14px';
+
+    toggleButton.addEventListener('click', () => {
+        if (stepsContainer.style.display === 'none') {
+            stepsContainer.style.display = 'flex';
+            toggleButton.innerText = 'Hide Injector Steps';
+        } else {
+            stepsContainer.style.display = 'none';
+            toggleButton.innerText = 'Show Injector Steps';
+        }
+    });
+
+    container.appendChild(stepsContainer);
+    container.appendChild(toggleButton);
     document.body.appendChild(container);
 }
 
@@ -110,6 +140,8 @@ function setKatValueAndDispatch(element: HTMLElement, value: string | number) {
     }
 }
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 async function uploadToAmazon(imageUrls: string[]) {
     const fileInput = document.querySelector('input[type="file"][accept*=".JPEG"]') as HTMLInputElement;
 
@@ -124,23 +156,31 @@ async function uploadToAmazon(imageUrls: string[]) {
         try {
             const response = await fetch(url);
             let blob = await response.blob();
-
             if (blob.type !== `image/jpeg` && blob.type !== 'image/jpg') {
                 blob = await transcodeToJpeg(blob);
             }
-
             const file = new File([blob], `product_image_${index}.jpg`, { type: `image/jpeg` });
+
             dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+            fileInput.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+
+            const randomDelay = Math.floor(Math.random() * (2034)) + 1500;
+            await sleep(randomDelay);
         } catch (error) {
             console.error(`Failed processing image: ${url}`, error);
         }
     }
 
-    if (dataTransfer.files.length > 0) {
-        fileInput.files = dataTransfer.files;
-        fileInput.dispatchEvent(new Event('change', { bubbles: true }));
-        console.log(`SUCCESS: Dispatching upload event for ${dataTransfer.files.length} images.`);
-    }
+    // if (dataTransfer.files.length > 0) {
+
+    //     fileInput.files = dataTransfer.files;
+    //     fileInput.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+
+    //     const finalJitter = Math.random() * 1500 + 500;
+    //     await sleep(finalJitter);
+    //     console.log(`SUCCESS: Injected ${dataTransfer.files.length} images with Stealth Jitter.`);
+    // }
 }
 
 const generateSKU = (productName: string): string => {
