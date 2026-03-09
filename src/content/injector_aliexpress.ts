@@ -1,29 +1,32 @@
-interface StoreComment {
+interface EnhancedComment {
+    authorThumb: string;
+    rating: number;
     date: string;
     content: string;
-    images: string[];
+    reviewImages: string[];
 }
 
-function harvestAliExpressReviews(): StoreComment[] {
+function harvestFullReviews(): EnhancedComment[] {
     const reviewItems = document.querySelectorAll('.list--itemBox--je_KNzb');
-    const comments: StoreComment[] = [];
+    const comments: EnhancedComment[] = [];
 
     reviewItems.forEach((item) => {
+        const rating = item.querySelectorAll('.comet-icon-starreviewfilled').length;
+
+        const authorThumb = item.querySelector('.list--itemPhoto--SQWM7vp img')?.getAttribute('src') || "";
+
         const infoText = item.querySelector('.list--itemInfo--VEcgSFh span')?.textContent || "";
-        const date = infoText.split('|')[1]?.trim() || "Recent";
+        const date = infoText.split('|')[1]?.trim() || "";
         const content = item.querySelector('.list--itemReview--d9Z9Z5Z')?.textContent?.trim() || "";
 
         const imgElements = item.querySelectorAll('.list--itemThumbnails--TtUDHhl img');
-        const images = Array.from(imgElements).map(img => {
-            const rawSrc = (img as HTMLImageElement).src;
-            return rawSrc.split('_')[0];
+        const reviewImages = Array.from(imgElements).map(img => {
+            const src = (img as HTMLImageElement).src;
+            return src.replace(/_\d+x\d+.*$/, "");
         });
 
-        if (content || images.length > 0) {
-            comments.push({ date, content, images });
-        }
+        comments.push({ authorThumb, rating, date, content, reviewImages });
     });
 
-    console.log(`SUCCESS: Harvested ${comments.length} comments for your store.`);
     return comments;
 }
