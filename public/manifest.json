@@ -13,7 +13,8 @@
         "https://*.amazon.com/*",
         "https://*.amazon.ca/*",
         "https://*.ebay.com/*",
-        "https://*.ebay.ca/*"
+        "https://*.ebay.ca/*",
+        "https://www.aliexpress.com/*"
     ],
     "content_scripts": [
         {
@@ -22,6 +23,14 @@
             ],
             "js": [
                 "injector_facebook.js"
+            ]
+        },
+        {
+            "matches": [
+                "https://www.aliexpress.com/*"
+            ],
+            "js": [
+                "injector_aliexpress.js"
             ]
         },
         {
