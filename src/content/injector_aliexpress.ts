@@ -84,25 +84,18 @@ async function sendReviewsToBackend() {
     }
 
     try {
-        const response = await fetch('http://localhost:5000/api/reviews/scraping', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer YOUR_INTERNAL_SECRET'
-            },
-            body: JSON.stringify({
-                productId: productId,
-                harvestedAt: new Date().toISOString(),
-                reviews: reviews
-            })
+        chrome.runtime.sendMessage({
+            action: "UPLOAD_REVIEWS",
+            endpoint: "https://api.afigureaday.com/api/reviews/scraping",
+            payload: { productId, reviews }
+        }, (response) => {
+            if (response?.success) {
+                alert(`SUCCESS: ${reviews.length} reviews sent.`);
+            } else {
+                // alert('Error: ' + response?.error);
+                console.error("Error:", response?.error);
+            }
         });
-
-        if (response.ok) {
-            alert(`Deployment Successful: ${reviews.length} reviews sent.`);
-        } else {
-            const errorText = await response.text();
-            console.error(`${response.status} - ${errorText}`);
-        }
     } catch (error) {
         console.error(error);
     }

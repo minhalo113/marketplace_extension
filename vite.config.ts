@@ -13,6 +13,7 @@ export default defineConfig({
                 injector_ebay: resolve('src/content/injector_ebay.ts'),
                 injector_aliexpress: resolve('src/content/injector_aliexpress.ts'),
                 injector_reviews: resolve('src/content/injector_reviews.ts'),
+                background: resolve('src/background/background.ts'),
             },
             output: {
                 entryFileNames: '[name].js',
