@@ -61,7 +61,7 @@ function setDescription(text: string) {
     const descriptionArea = document.getElementById('pstad-descrptn') as HTMLTextAreaElement;
 
     if (descriptionArea) {
-        descriptionArea.value = text;
+        descriptionArea.value = text + '\nShop now at https://www.afigureaday.com';
         descriptionArea.dispatchEvent(new Event('input', { bubbles: true }));
         descriptionArea.dispatchEvent(new Event('change', { bubbles: true }));
         descriptionArea.dispatchEvent(new Event('blur', { bubbles: true }));

@@ -190,7 +190,7 @@ async function fillFacebookForm() {
                 ?.querySelector('textarea') as HTMLTextAreaElement;
 
             if (descriptionInput) {
-                descriptionInput.value = product.description;
+                descriptionInput.value = product.description + '\nShop now at https://www.afigureaday.com';
                 descriptionInput.dispatchEvent(new Event('input', { bubbles: true }));
             } else {
                 console.warn('Description input not found');
