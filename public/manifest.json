@@ -12,6 +12,7 @@
     },
     "host_permissions": [
         "https://my-website-l1fe.vercel.app/admin/dashboard/*",
+        "https://lumine-adorn.vercel.app/admin/dashboard/*",
         "https://www.facebook.com/*",
         "https://www.kijiji.ca/",
         "https://*.amazon.com/*",
@@ -49,7 +50,8 @@
         },
         {
             "matches": [
-                "https://my-website-l1fe.vercel.app/admin/dashboard/*"
+                "https://my-website-l1fe.vercel.app/admin/dashboard/*",
+                "https://lumine-adorn.vercel.app/admin/dashboard/*"
             ],
             "js": [
                 "harvester.js"
